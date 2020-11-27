@@ -1,69 +1,51 @@
-import random
+def clean(ar, i, j):
+    ar[i][j] = 0
+    return ar
 
-environment = {'A': 0, 'B': 0} # assumed initial state
 
-def checkDirt():
-    return random.randint(0,1)
+def show(ar, a, b):
+    for i in range(len(ar)):
+        for j in range(len(ar[0])):
+            if i == a and j == b:
+                print("-> {}".format(ar[i][j]), end="\t")
+            else:
+                print(ar[i][j], end="\t")
+        print()
 
-def setEnvironment():
-    environment['A'] = checkDirt()
-    environment['B'] = checkDirt()
 
-    print("\nNew environment: ",end="")
-    print(environment)
+print("Enter row and columns")
+n, m = map(int, input().split())
+print("Enter the current state")
+ar = []
+for i in range(n):
+    a = []
+    ar.append(input().split())
 
-def cleaned():
-    print("\nBoth the locations are cleaned.")
-    exit(0)
+for i in range(n):
+    if i % 2 == 0:
+        for j in range(m):
+            print("Move - Right")
+            if ar[i][j] == "1":
+                print("Sense - Dirty")
+                ar = clean(ar, i, j)
+                show(ar, i, j)
+                print("*" * 20)
+            else:
+                print("Sense - Clean")
+                print(ar,i,j)
+                print("*" * 20)
 
-def newState():
-    setEnvironment()
-
-    if(environment['A'] == 0 and environment['B'] == 0):
-        cleaned()
     else:
-        if(environment['A']):
-            cleanAt(1)
-        else:
-            cleanAt(0)
+        for j in range(m - 1, -1, -1):
+            print("Move - Left")
+            if ar[i][j] == "1":
+                print("Sense - Dirty")
+                clean(ar, i, j)
+                show(ar,i,j)
+                print("*" * 20)
+            else:
+                print("Sense - Clean")
+                print(ar,i,j)
+                print("*" * 20)
 
-def cleanAt(state):
-    if state == 1:
-        print("\nVaccum cleaner at A location.")
-        dirt = environment['A'] # 0-nodirt 1-dirt
-
-        if dirt == 1:
-            print("Location A is dirty.")
-            print("Vaccum cleaner cleaned the dirt at A.")
-            environment['A'] = 0
-        else:
-            print("Location A is clean.")
-        
-        if environment['B']:
-            print("Vaccum cleaner moving to B location.")
-            cleanAt(0)
-    
-    else:
-        print("\nVaccum cleaner at B location.")
-        dirt = environment['B'] # 0-nodirt 1-dirt
-
-        if dirt == 1:
-            print("Location B is dirty.")
-            print("Vaccum cleaner cleaned the dirt at B.")
-            environment['B'] = 0
-        else:
-            print("Location B is clean.")
-        
-        if environment['A']:
-            print("Vaccum cleaner moving to A location.")
-            cleanAt(1)
-
-    print("\nCurrent environment: ",end="")
-    print(environment)
-    newState()
- 
-def start():
-    newState()
-
-if __name__ == "__main__":
-    start()
+    print("Move - Down")
